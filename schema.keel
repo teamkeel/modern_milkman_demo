@@ -126,11 +126,13 @@ model Site {
 
     actions {
         create createSite() with (name, address)
+        list listSite()
+        get getSite(id)
     }
 
     @permission(
         expression: true,
-        actions: [create]
+        actions: [create, list, get]
     )
 }
 
