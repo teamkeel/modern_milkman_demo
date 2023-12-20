@@ -1,7 +1,7 @@
 // PRODUCTS
 model Product {
     fields {
-        name Text
+        title Text
         description Text
         imageUrl Text
         gtin Text?
@@ -15,9 +15,9 @@ model Product {
 
     actions {
         get getProduct(id)
-        create createProduct() with (name, description, imageUrl, price, size, specialOfferDiscount, specialOffer)
+        create createProduct() with (title, description, imageUrl, price, size, specialOfferDiscount, specialOffer)
         list listProducts()
-        update updateProduct(id) with (name?, description?, imageUrl?, gtin?)
+        update updateProduct(id) with (title?, description?, imageUrl?, gtin?)
         delete deleteProduct(id)
     }
 
