@@ -20,6 +20,11 @@ model Product {
         update updateProduct(id) with (title?, description?, imageUrl?, gtin?)
         delete deleteProduct(id)
     }
+
+    @permission(
+        expression: true,
+        actions: [list, create]
+    )
 }
 
 model Bundle {
@@ -50,7 +55,6 @@ model ProductBundle {
 // CUSTOMERS
 model Customer {
     fields {
-        identity Identity
         firstName Text
         lastName Text
         email Text
@@ -60,10 +64,16 @@ model Customer {
     }
 
     actions {
-        create createCustomer() with (firstName, lastName, email, phone, marketingConsent, deliveryAddress) {
-            @set(customer.identity = ctx.identity)
-        }
+        list listCustomer(firstName, lastName, email, phone)
+        create createCustomer() with (firstName, lastName, email, phone, marketingConsent, deliveryAddress)
     }
+
+    @permission(
+        expression: true,
+        actions: [list, create]
+    )
+
+    @on([create], slackmessage)
 }
 
 model Order {
@@ -79,7 +89,11 @@ model Order {
         create createOrder() with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
         update updateOrder(id) with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
     }
-    
+
+    @permission(
+        expression: true,
+        actions: [list, create]
+    )   
 }
 
 enum OrderStatus {
@@ -125,6 +139,11 @@ model SiteProduct {
         list listSiteProduct()
         update updateSiteProduct(id) with (price)
     }
+
+    @permission(
+        expression: true,
+        actions: [list, create]
+    )
 }
 
 model SiteProductLocation {
@@ -138,6 +157,11 @@ model SiteProductLocation {
         list listSiteProductLocation()
         update updateSiteProductLocation(id) with (quantity)
     }
+
+    @permission(
+        expression: true,
+        actions: [list, create]
+    )
 }
 
 model StorageLocation {

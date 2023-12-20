@@ -23,19 +23,13 @@ module.exports.OrderStatus = {
     Collected: "Collected",
     Cancelled: "Cancelled",
 };
+module.exports.Slackmessage = (fn) => fn;
 const tableConfigMap = {
     "bundle": {
         "products": {
             "foreignKey": "bundles_id",
             "referencesTable": "product_bundle",
             "relationshipType": "hasMany"
-        }
-    },
-    "customer": {
-        "identity": {
-            "foreignKey": "identity_id",
-            "referencesTable": "identity",
-            "relationshipType": "belongsTo"
         }
     },
     "order": {
@@ -134,6 +128,7 @@ function createContextAPI({ responseHeaders, meta }) {
     const env = {
     };
     const secrets = {
+        SLACK_URL: meta.secrets.SLACK_URL || "",
     };
     return { headers, response, identity, env, now, secrets, isAuthenticated };
 };
@@ -144,6 +139,7 @@ function createJobContextAPI({ meta }) {
     const env = {
     };
     const secrets = {
+        SLACK_URL: meta.secrets.SLACK_URL || "",
     };
     return { identity, env, now, secrets, isAuthenticated };
 };
@@ -152,6 +148,7 @@ function createSubscriberContextAPI({ meta }) {
     const env = {
     };
     const secrets = {
+        SLACK_URL: meta.secrets.SLACK_URL || "",
     };
     return { env, now, secrets };
 };
