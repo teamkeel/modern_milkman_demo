@@ -89,11 +89,13 @@ model Order {
     actions {
         create createOrder() with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
         update updateOrder(id) with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
+        list listOrders()
+        delete deleteOrder(id)
     }
 
     @permission(
         expression: true,
-        actions: [list, create]
+        actions: [list, create, update, delete]
     )   
 }
 
