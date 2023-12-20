@@ -65,6 +65,7 @@ model Customer {
 
     actions {
         list listCustomers()
+        get getCustomer(id)
         create createCustomer() with (firstName, lastName, email, phone, marketingConsent, deliveryAddress)
     }
 
@@ -117,13 +118,14 @@ model OrderItems {
 
 model Site {
     fields {
-        title Text
-        addressLine1 Text
-        addressLine2 Text
-        addressCity Text
-        addressCountry Text
+        name Text
+        address Text
         storageLocations StorageLocation[]
         currency Text?
+    }
+
+    actions {
+        create createSite() with (name, address)
     }
 }
 
@@ -154,7 +156,9 @@ model SiteProductLocation {
     }
 
     actions {
+        create createStockItem() with (location.name, location.site.name, location.site.address, quantity, siteProduct.product.id, siteProduct.price)
         list listSiteProductLocation()
+        get getStockItem(id)
         update updateSiteProductLocation(id) with (quantity)
     }
 
@@ -166,7 +170,7 @@ model SiteProductLocation {
 
 model StorageLocation {
     fields {
-        title Text
+        name Text
         site Site
     }
 }
