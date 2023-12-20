@@ -1,0 +1,148 @@
+// PRODUCTS
+model Product {
+    fields {
+        title Text
+        description Text
+        imageUrl Text
+        gtin Text?
+        price Number
+        size Text
+        unitPrice Text?
+        specialOfferDiscount Number
+        specialOffer Boolean
+        bundles ProductBundle[]
+ }
+
+    actions {
+        get getProduct(id)
+        create createProduct() with (title, description, imageUrl, price, size, specialOfferDiscount, specialOffer)
+        list listProducts()
+        update updateProduct(id) with (title?, description?, imageUrl?, gtin?)
+        delete deleteProduct(id)
+    }
+}
+
+model Bundle {
+    fields {
+        title Text
+        description Text
+        imageUrl Text
+        gtin Text?
+        price Number
+        size Text
+        unitPrice Text?
+        specialOfferDiscount Number
+        specialOffer Boolean
+        products ProductBundle[]
+    }
+}
+
+
+model ProductBundle {
+    fields {
+        products Product
+        bundles Bundle
+    }
+}
+
+
+
+// CUSTOMERS
+model Customer {
+    fields {
+        identity Identity
+        firstName Text
+        lastName Text
+        email Text
+        phone Text
+        marketingConsent Boolean
+        deliveryAddress Text
+    }
+
+    actions {
+        create createCustomer() with (firstName, lastName, email, phone, marketingConsent, deliveryAddress) {
+            @set(customer.identity = ctx.identity)
+        }
+    }
+}
+
+model Order {
+    fields {
+        customer Customer
+        site Site
+        status OrderStatus @default(OrderStatus.New)
+        items OrderItems[]
+        // totalPrice @computed(sum(items.price))
+    }
+    
+    actions {
+        create createOrder() with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
+        update updateOrder(id) with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
+    }
+    
+}
+
+enum OrderStatus {
+    New
+    Readytocollect
+    Collected
+    Cancelled
+}
+
+model OrderItems {
+    fields {
+        order Order
+        product Product
+        quantity Number
+        price Number
+    }
+}
+
+
+// OPERATIONS
+
+model Site {
+    fields {
+        title Text
+        addressLine1 Text
+        addressLine2 Text
+        addressCity Text
+        addressCountry Text
+        storageLocations StorageLocation[]
+        currency Text?
+    }
+}
+
+model SiteProduct {
+    fields {
+        product Product
+        locations SiteProductLocation[]
+        price Number
+    }
+
+    actions {
+        create createSiteProduct() with (product.id, locations.location.id, price)
+        list listSiteProduct()
+        update updateSiteProduct(id) with (price)
+    }
+}
+
+model SiteProductLocation {
+    fields {
+        location StorageLocation
+        quantity Number
+        siteProduct SiteProduct
+    }
+
+    actions {
+        list listSiteProductLocation()
+        update updateSiteProductLocation(id) with (quantity)
+    }
+}
+
+model StorageLocation {
+    fields {
+        title Text
+        site Site
+    }
+}
