@@ -1,7 +1,7 @@
 // PRODUCTS
 model Product {
     fields {
-        title Text
+        name Text
         description Text
         imageUrl Text
         gtin Text?
@@ -15,15 +15,15 @@ model Product {
 
     actions {
         get getProduct(id)
-        create createProduct() with (title, description, imageUrl, price, size, specialOfferDiscount, specialOffer)
+        create createProduct() with (name, description, imageUrl, price, size, specialOfferDiscount, specialOffer)
         list listProducts()
-        update updateProduct(id) with (title?, description?, imageUrl?, gtin?)
+        update updateProduct(id) with (name?, description?, imageUrl?, gtin?)
         delete deleteProduct(id)
     }
 
     @permission(
         expression: true,
-        actions: [list, create]
+        actions: [list, create, update, delete, get]
     )
 }
 
@@ -142,7 +142,7 @@ model SiteProduct {
 
     @permission(
         expression: true,
-        actions: [list, create]
+        actions: [list, create, update]
     )
 }
 
@@ -160,7 +160,7 @@ model SiteProductLocation {
 
     @permission(
         expression: true,
-        actions: [list, create]
+        actions: [list, update]
     )
 }
 
