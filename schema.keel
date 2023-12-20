@@ -127,6 +127,11 @@ model Site {
     actions {
         create createSite() with (name, address)
     }
+
+    @permission(
+        expression: true,
+        actions: [create]
+    )
 }
 
 model SiteProduct {
@@ -164,7 +169,7 @@ model SiteProductLocation {
 
     @permission(
         expression: true,
-        actions: [list, update]
+        actions: [list, update, create, get]
     )
 }
 
