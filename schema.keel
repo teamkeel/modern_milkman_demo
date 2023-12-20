@@ -64,7 +64,7 @@ model Customer {
     }
 
     actions {
-        list listCustomer(firstName, lastName, email, phone)
+        list listCustomers()
         create createCustomer() with (firstName, lastName, email, phone, marketingConsent, deliveryAddress)
     }
 
