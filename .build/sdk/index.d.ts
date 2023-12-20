@@ -40,6 +40,27 @@ export interface UpdateProductInput {
 export interface DeleteProductInput {
     id: string;
 }
+export interface StringQueryInput {
+    equals?: string | null;
+    notEquals?: string | null;
+    startsWith?: string;
+    endsWith?: string;
+    contains?: string;
+    oneOf?: string[];
+}
+export interface ListCustomerWhere {
+    firstName: StringQueryInput;
+    lastName: StringQueryInput;
+    email: StringQueryInput;
+    phone: StringQueryInput;
+}
+export interface ListCustomerInput {
+    where: ListCustomerWhere;
+    first?: number;
+    after?: string;
+    last?: number;
+    before?: string;
+}
 export interface CreateCustomerInput {
     firstName: string;
     lastName: string;
@@ -170,6 +191,18 @@ export interface ResetPasswordInput {
     password: string;
 }
 export interface ResetPasswordResponse {
+}
+export type SlackmessageEvent = (SlackmessageCustomerCreatedEvent);
+export interface SlackmessageCustomerCreatedEvent {
+    eventName: "customer.created";
+    occurredAt: Date;
+    identityId?: string;
+    target: SlackmessageCustomerCreatedEventTarget;
+}
+export interface SlackmessageCustomerCreatedEventTarget {
+    id: string;
+    type: string;
+    data: Customer;
 }
 export enum OrderStatus {
     New = "New",
@@ -611,7 +644,6 @@ export interface CustomerTable {
     id: Generated<string>
     createdAt: Generated<Date>
     updatedAt: Generated<Date>
-    identityId: string
 }
 export interface Customer {
     firstName: string
@@ -623,7 +655,6 @@ export interface Customer {
     id: string
     createdAt: Date
     updatedAt: Date
-    identityId: string
 }
 export interface CustomerCreateValues {
     firstName: string
@@ -635,10 +666,8 @@ export interface CustomerCreateValues {
     id?: string
     createdAt?: Date
     updatedAt?: Date
-    identityId: string
 }
 export interface CustomerWhereConditions {
-    identity?: IdentityWhereConditions | null;
     firstName?: string | runtime.StringWhereCondition | null;
     lastName?: string | runtime.StringWhereCondition | null;
     email?: string | runtime.StringWhereCondition | null;
@@ -648,7 +677,6 @@ export interface CustomerWhereConditions {
     id?: string | runtime.IDWhereCondition | null;
     createdAt?: Date | runtime.DateWhereCondition | null;
     updatedAt?: Date | runtime.DateWhereCondition | null;
-    identityId?: string | runtime.IDWhereCondition | null;
 }
 export type CustomerOrderBy = {
     firstName?: SortDirection,
@@ -659,8 +687,7 @@ export type CustomerOrderBy = {
     deliveryAddress?: SortDirection,
     id?: SortDirection,
     createdAt?: SortDirection,
-    updatedAt?: SortDirection,
-    identityId?: SortDirection
+    updatedAt?: SortDirection
 }
 
 export interface CustomerFindManyParams {
@@ -677,14 +704,12 @@ export type CustomerAPI = {
     * @example
     ```typescript
     const record = await models.customer.create({
-        identity: undefined,
         firstName: '',
         lastName: '',
         email: '',
         phone: '',
         marketingConsent: false,
-        deliveryAddress: '',
-        identityId: undefined
+        deliveryAddress: ''
     });
     ```
     */
@@ -693,7 +718,7 @@ export type CustomerAPI = {
     * Update a Customer record
     * @example
     ```typescript
-    const customer = await models.customer.update({ id: "abc" }, { identity: XXX }});
+    const customer = await models.customer.update({ id: "abc" }, { firstName: XXX }});
     ```
     */
     update(where: CustomerUniqueConditions, values: Partial<Customer>): Promise<Customer>;
@@ -1598,6 +1623,7 @@ export type IdentityQueryBuilder = {
     delete() : Promise<string>;
     update(values: Partial<Identity>) : Promise<Identity>;
 }
+export declare function Slackmessage(fn: (ctx: SubscriberContextAPI, event: SlackmessageEvent) => Promise<void>): Promise<void>;
 interface database {
     product: ProductTable;
     bundle: BundleTable;
@@ -1630,6 +1656,7 @@ export declare const permissions: runtime.Permissions;
 type Environment = {
 }
 type Secrets = {
+    SLACK_URL: string;
 }
 
 export interface ContextAPI extends runtime.ContextAPI {

@@ -39,6 +39,27 @@ export interface UpdateProductInput {
 export interface DeleteProductInput {
     id: string;
 }
+export interface StringQueryInput {
+    equals?: string | null;
+    notEquals?: string | null;
+    startsWith?: string;
+    endsWith?: string;
+    contains?: string;
+    oneOf?: string[];
+}
+export interface ListCustomerWhere {
+    firstName: StringQueryInput;
+    lastName: StringQueryInput;
+    email: StringQueryInput;
+    phone: StringQueryInput;
+}
+export interface ListCustomerInput {
+    where: ListCustomerWhere;
+    first?: number;
+    after?: string;
+    last?: number;
+    before?: string;
+}
 export interface CreateCustomerInput {
     firstName: string;
     lastName: string;
@@ -170,6 +191,18 @@ export interface ResetPasswordInput {
 }
 export interface ResetPasswordResponse {
 }
+export type SlackmessageEvent = (SlackmessageCustomerCreatedEvent);
+export interface SlackmessageCustomerCreatedEvent {
+    eventName: "customer.created";
+    occurredAt: Date;
+    identityId?: string;
+    target: SlackmessageCustomerCreatedEventTarget;
+}
+export interface SlackmessageCustomerCreatedEventTarget {
+    id: string;
+    type: string;
+    data: sdk.Customer;
+}
 declare class ActionExecutor {
     withIdentity(identity: sdk.Identity): ActionExecutor;
     withAuthToken(token: string): ActionExecutor;
@@ -178,6 +211,7 @@ declare class ActionExecutor {
     listProducts(i?: ListProductsInput): Promise<{results: sdk.Product[], pageInfo: runtime.PageInfo}>;
     updateProduct(i: UpdateProductInput): Promise<sdk.Product>;
     deleteProduct(i: DeleteProductInput): Promise<string>;
+    listCustomer(i: ListCustomerInput): Promise<{results: sdk.Customer[], pageInfo: runtime.PageInfo}>;
     createCustomer(i: CreateCustomerInput): Promise<sdk.Customer>;
     createOrder(i: CreateOrderInput): Promise<sdk.Order>;
     updateOrder(i: UpdateOrderInput): Promise<sdk.Order>;
@@ -190,6 +224,10 @@ declare class ActionExecutor {
     requestPasswordReset(i: RequestPasswordResetInput): Promise<RequestPasswordResetResponse>;
     resetPassword(i: ResetPasswordInput): Promise<ResetPasswordResponse>;
 }
+declare class SubscriberExecutor {
+    slackmessage(e: SlackmessageEvent): Promise<void>;
+}
+export declare const subscribers: SubscriberExecutor;
 export declare const actions: ActionExecutor;
 export declare const models: sdk.ModelsAPI;
 export declare function resetDatabase(): Promise<void>;

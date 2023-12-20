@@ -1,0 +1,8 @@
+# Visit https://keel.notaku.site/documentation/environment-variables-and-secrets for more
+# information about environment variables and secrets
+environment:
+  staging:
+  production:
+
+secrets:
+  - name: SLACK_URL

@@ -1,11 +1,13 @@
 import { handleRequest, handleJob, handleSubscriber, tracing } from '@teamkeel/functions-runtime';
 import { createContextAPI, createJobContextAPI, createSubscriberContextAPI, permissionFns } from '@teamkeel/sdk';
 import { createServer } from "http";
+import subscriber_slackmessage from "../subscribers/slackmessage.ts";
 const functions = {
 }
 const jobs = {
 }
 const subscribers = {
+    slackmessage: subscriber_slackmessage,
 }
 const actionTypes = {
 }
