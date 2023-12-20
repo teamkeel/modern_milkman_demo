@@ -163,7 +163,7 @@ model SiteProductLocation {
     }
 
     actions {
-        create createStockItem() with (location.id, quantity, siteProduct.product.id, siteProduct.price)
+        create createStockItem() with (location.id, location.site.id, quantity, siteProduct.product.id, siteProduct.price)
         list listSiteProductLocation()
         get getStockItem(id)
         update updateSiteProductLocation(id) with (quantity)
