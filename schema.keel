@@ -161,7 +161,7 @@ model SiteProductLocation {
     }
 
     actions {
-        create createStockItem() with (location.name, location.site.name, location.site.address, quantity, siteProduct.product.id, siteProduct.price)
+        create createStockItem() with (location.id, location.site.id, quantity, siteProduct.product.id, siteProduct.price)
         list listSiteProductLocation()
         get getStockItem(id)
         update updateSiteProductLocation(id) with (quantity)
@@ -178,4 +178,16 @@ model StorageLocation {
         name Text
         site Site
     }
+
+    actions {
+        create createStorageLocation() with (name, site.id)
+        list listStorageLocations()
+        get getStorageLocation(id)
+    }
+
+    @permission(
+        expression: true,
+        actions: [list, update, create, get]
+    ) 
 }
+
