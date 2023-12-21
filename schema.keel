@@ -96,7 +96,7 @@ model Order {
 
     @permission(
         expression: true,
-        actions: [list, create, update, delete]
+        actions: [list, create, update, delete, get]
     )   
 }
 
