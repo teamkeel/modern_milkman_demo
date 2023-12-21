@@ -114,6 +114,16 @@ model OrderItems {
         quantity Number
         price Number
     }
+
+    actions {
+        list listOrderItems()
+        get getOrderItem(id)
+    }
+
+    @permission(
+        expression: true,
+        actions: [list,get]
+    )
 }
 
 
