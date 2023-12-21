@@ -116,7 +116,7 @@ model OrderItems {
     }
 
     actions {
-        list listOrderItems()
+        list listOrderItems(order.id)
         get getOrderItem(id)
     }
 
