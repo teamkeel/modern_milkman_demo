@@ -10,6 +10,7 @@ model Product {
         unitPrice Text?
         specialOfferDiscount Number
         specialOffer Boolean
+        orderItems OrderItems[]
         bundles ProductBundle[]
  }
 
@@ -17,6 +18,7 @@ model Product {
         get getProduct(id)
         create createProduct() with (title, description, imageUrl, price, size, specialOfferDiscount, specialOffer)
         list listProducts()
+        list listOrderItemsProduct(orderItems.id)
         update updateProduct(id) with (title?, description?, imageUrl?, gtin?)
         delete deleteProduct(id)
     }
