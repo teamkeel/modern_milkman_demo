@@ -16,7 +16,7 @@ export default Slackmessage(async (ctx, event) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          text: "New account signed up! " + event.target.data.email,
+          text: "New customer created! " + event.target.data.email,
         }),
       })
         .then(async (response) => {
