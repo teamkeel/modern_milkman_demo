@@ -119,6 +119,7 @@ model OrderItems {
 
     actions {
         list listOrderItems(order.id)
+        list listOrderProducts(product.id)
         get getOrderItem(id)
     }
 
