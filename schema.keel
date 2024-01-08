@@ -71,7 +71,7 @@ model Customer {
 
     @permission(
         expression: true,
-        actions: [list, create]
+        actions: [list, create, get]
     )
 
     @on([create], slackmessage)
