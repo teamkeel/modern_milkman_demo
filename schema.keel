@@ -91,6 +91,7 @@ model Order {
         create createOrder() with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
         update updateOrder(id) with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
         list listOrders()
+        list listCustomerOrders(customer.id)
         get getorder(id)
         delete deleteOrder(id)
     }
