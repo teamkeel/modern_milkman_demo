@@ -59,6 +59,7 @@ model Customer {
         lastName Text
         email Text
         phone Text
+        orders Order[]
         marketingConsent Boolean
         deliveryAddress Text
     }
