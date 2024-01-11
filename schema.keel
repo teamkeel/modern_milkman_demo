@@ -7,7 +7,7 @@ model Product {
         gtin Text?
         price Number
         size Text
-        unitPrice Text?
+        unitPrice Number?
         specialOfferDiscount Number
         specialOffer Boolean
         orderItems OrderItems[]
@@ -43,7 +43,6 @@ model Bundle {
         description Text
         imageUrl Text
         gtin Text?
-        price Number
         size Text
         unitPrice Text?
         specialOfferDiscount Number
@@ -99,9 +98,11 @@ model Order {
     fields {
         customer Customer
         site Site
-        status OrderStatus @default(OrderStatus.New)
+        status OrderStatus @default(OrderStatus.Draft)
         items OrderItems[]
-        // totalPrice @computed(sum(items.price))
+        totalDiscount Number?
+        totalPrice Number?
+        couponCode CouponCode?
     }
 
     actions {
@@ -110,20 +111,20 @@ model Order {
             site.id,
             items.product.id,
             items.quantity,
-            items.price,
             status,
-        )
+            couponCode.id?,
+        ) @function
         update updateOrder(id) with (
             customer.id,
             site.id,
             items.product.id,
             items.quantity,
-            items.price,
             status,
-        )
+            couponCode.id?,
+        ) @function
         list listOrders()
         list listCustomerOrders(customer.id)
-        get getorder(id)
+        get getOrder(id)
         delete deleteOrder(id)
     }
 
@@ -134,6 +135,7 @@ model Order {
 }
 
 enum OrderStatus {
+    Draft
     New
     Readytocollect
     Collected
@@ -145,7 +147,6 @@ model OrderItems {
         order Order
         product Product
         quantity Number
-        price Number
     }
 
     actions {
@@ -185,13 +186,16 @@ model SiteProduct {
     fields {
         product Product
         locations SiteProductLocation[]
-        price Number
     }
 
     actions {
-        create createSiteProduct() with (product.id, locations.location.id, price)
+        create createSiteProduct() with (
+            product.id,
+            locations.location.id,
+            product.price,
+        )
         list listSiteProduct()
-        update updateSiteProduct(id) with (price)
+        update updateSiteProduct(id) with (product.price)
     }
 
     @permission(
@@ -213,7 +217,7 @@ model SiteProductLocation {
             location.site.id,
             quantity,
             siteProduct.product.id,
-            siteProduct.price,
+            siteProduct.product.price,
         )
         list listSiteProductLocation()
         get getStockItem(id)
@@ -241,5 +245,72 @@ model StorageLocation {
     @permission(
         expression: true,
         actions: [list, update, create, get]
+    )
+}
+
+// COUPON CODES
+model CouponCode {
+    fields {
+        code Text @unique
+        validFrom Timestamp?
+        validTo Timestamp?
+        minimumOrderAmount Number?
+        discount Number
+    }
+
+    actions {
+        create createCouponCode() with (code, discount) {
+            @set(couponCode.validFrom = ctx.now)
+        }
+        get getCouponCode(id)
+        list listCouponCodes()
+        update updateCouponCode(id) with (
+            code?,
+            discount?,
+            validFrom?,
+            validTo?,
+            minimumOrderAmount?,
+        )
+    }
+
+    @permission(
+        expression: true,
+        actions: [create, get, list, update]
+    )
+}
+
+model CouponCodesCustomers {
+    fields {
+        couponCode CouponCode
+        customer Customer
+    }
+
+    actions {
+        create createCouponCodesCustomers() with (couponCode.id, customer.id)
+        list listCouponCodesCustomers()
+        get getCouponCodesCustomers(id)
+    }
+
+    @permission(
+        expression: true,
+        actions: [create, get, list]
+    )
+}
+
+model CouponCodesProducts {
+    fields {
+        couponCode CouponCode
+        product Product
+    }
+
+    actions {
+        create createCouponCodesProducts() with (couponCode.id, product.id)
+        list listCouponCodesProducts()
+        get getCouponCodesProducts(id)
+    }
+
+    @permission(
+        expression: true,
+        actions: [create, get, list]
     )
 }
