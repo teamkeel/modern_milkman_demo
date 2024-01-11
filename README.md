@@ -1,6 +1,6 @@
 # Modern Milkman Demo
 
-This repo is just a proof of concept for the [Modern Milkman]() and should not be used in production.
+This repo is just a proof of concept for the [Modern Milkman](https://themodernmilkman.co.uk/) and should not be used in production.
 
 ## The Schema
 
