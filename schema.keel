@@ -12,11 +12,19 @@ model Product {
         specialOffer Boolean
         orderItems OrderItems[]
         bundles ProductBundle[]
- }
+    }
 
     actions {
         get getProduct(id)
-        create createProduct() with (title, description, imageUrl, price, size, specialOfferDiscount, specialOffer)
+        create createProduct() with (
+            title,
+            description,
+            imageUrl,
+            price,
+            size,
+            specialOfferDiscount,
+            specialOffer,
+        )
         list listProducts()
         list listOrderItemsProduct(orderItems.id)
         update updateProduct(id) with (title?, description?, imageUrl?, gtin?)
@@ -44,15 +52,12 @@ model Bundle {
     }
 }
 
-
 model ProductBundle {
     fields {
         products Product
         bundles Bundle
     }
 }
-
-
 
 // CUSTOMERS
 model Customer {
@@ -69,7 +74,14 @@ model Customer {
     actions {
         list listCustomers()
         get getCustomer(id)
-        create createCustomer() with (firstName, lastName, email, phone, marketingConsent, deliveryAddress)
+        create createCustomer() with (
+            firstName,
+            lastName,
+            email,
+            phone,
+            marketingConsent,
+            deliveryAddress,
+        )
     }
 
     @permission(
@@ -77,7 +89,10 @@ model Customer {
         actions: [list, create, get]
     )
 
-    @on([create], slackmessage)
+    @on(
+        [create],
+        slackmessage
+    )
 }
 
 model Order {
@@ -88,10 +103,24 @@ model Order {
         items OrderItems[]
         // totalPrice @computed(sum(items.price))
     }
-    
+
     actions {
-        create createOrder() with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
-        update updateOrder(id) with (customer.id, site.id, items.product.id, items.quantity, items.price, status)
+        create createOrder() with (
+            customer.id,
+            site.id,
+            items.product.id,
+            items.quantity,
+            items.price,
+            status,
+        )
+        update updateOrder(id) with (
+            customer.id,
+            site.id,
+            items.product.id,
+            items.quantity,
+            items.price,
+            status,
+        )
         list listOrders()
         list listCustomerOrders(customer.id)
         get getorder(id)
@@ -101,7 +130,7 @@ model Order {
     @permission(
         expression: true,
         actions: [list, create, update, delete, get]
-    )   
+    )
 }
 
 enum OrderStatus {
@@ -127,13 +156,11 @@ model OrderItems {
 
     @permission(
         expression: true,
-        actions: [list,get]
+        actions: [list, get]
     )
 }
 
-
 // OPERATIONS
-
 model Site {
     fields {
         name Text
@@ -181,7 +208,13 @@ model SiteProductLocation {
     }
 
     actions {
-        create createStockItem() with (location.id, location.site.id, quantity, siteProduct.product.id, siteProduct.price)
+        create createStockItem() with (
+            location.id,
+            location.site.id,
+            quantity,
+            siteProduct.product.id,
+            siteProduct.price,
+        )
         list listSiteProductLocation()
         get getStockItem(id)
         update updateSiteProductLocation(id) with (quantity)
@@ -208,6 +241,5 @@ model StorageLocation {
     @permission(
         expression: true,
         actions: [list, update, create, get]
-    ) 
+    )
 }
-
