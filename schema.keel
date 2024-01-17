@@ -86,7 +86,7 @@ model Customer {
 
     @permission(
         expression: true,
-        actions: [list, create, get]
+        actions: [list, create, get, update]
     )
 
     @on(
