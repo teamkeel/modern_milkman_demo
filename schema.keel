@@ -81,6 +81,7 @@ model Customer {
             marketingConsent,
             deliveryAddress,
         )
+        update updateCustomer(id)
     }
 
     @permission(
